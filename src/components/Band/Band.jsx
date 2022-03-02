@@ -1,5 +1,4 @@
 import BandPhotos from './BandPhotos';
-import member from './member.jpeg'
 
 const Band = () => {
     return (
