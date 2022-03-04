@@ -8,6 +8,7 @@ import ClassComponent from './ClassComponent/ClassComponent';
 import ContentCard from './ContentCard/ContentCard';
 import TodoItem from './components/TodoItem/TodoItem';
 import { Button, Input } from 'reactstrap';
+import axios from 'axios';
 
 const dataTodo = [
   {
@@ -37,38 +38,38 @@ const dataTodo = [
 function App() {
   const [myUsername, setMyUsername] = useState("Seto");
   const [fullName, setFullName] = useState("")
-  const [todoList, setTodoList] = useState([
-    {
-    dates : new Date(),
-    action : "Belajar Programming",
-    status : false
-  },
+  const [todoList, setTodoList] = useState([])
+  //   {
+  //   dates : new Date(),
+  //   action : "Belajar Programming",
+  //   status : false
+  // },
   
   
-  {
-    dates : new Date(),
-    action : "Libur",
-    status : true
-  },
+  // {
+  //   dates : new Date(),
+  //   action : "Libur",
+  //   status : true
+  // },
   
-  {
-    dates : new Date(),
-    action : "Masih Belajar Programming",
-    status : false
-  }
+  // {
+  //   dates : new Date(),
+  //   action : "Masih Belajar Programming",
+  //   status : false
+  // }
   
-  ])
+  // ])
 
 
   function renderTodoList() {
-    return todoList.map((val, index) => {
+    return todoList.map((val) => {
       return (
         <TodoItem
           dates={val.dates}
           action={val.action}
           status={val.status} 
-          delete={() => deleteTodoItem(index)}
-          edit={() => toggleTodoStatus(index)}
+          delete={() => deleteTodoItem(val.id)}
+          edit={() => toggleTodoStatus(val.id)}
         />
       );
     });
@@ -94,30 +95,53 @@ function App() {
   }
 
   const addTodoItem = () => {
-    const newTodoArray = [...todoList]
+    // const newTodoArray = [...todoList]
 
-    newTodoArray.push ({
-        dates : todoDateValue,
-        action : todoInputValue,
-        status : false
+    // newTodoArray.push ({
+    //     dates : todoDateValue,
+    //     action : todoInputValue,
+    //     status : false
+    // })
+    // setTodoList(newTodoArray)
+    const newData = {
+      dates : todoDateValue,
+      action : todoInputValue,
+      status : false
+  }
+  axios.post("http://localhost:2000/todos", newData)
+  .then(() => {
+    fetchTodoList()
+  })
+    }
+
+  const deleteTodoItem = (id) => {
+    axios.delete(`http://localhost:2000/todos/${id}`)
+    .then(() => {
+      fetchTodoList()
+    })  
+  }
+
+  const toggleTodoStatus = (id) => {
+    const dataToFind = todoList.find((val) => {
+      return val.id === ondblclick;
     })
-    setTodoList(newTodoArray)
+    // axios.get(`http://localhost:2000/todos/${id}`)
+    // .then((res) => {
+    //   const newStatusValue = !res.data.status  
+      axios.patch(`http://localhost:2000/todos/${id}`, {status: !dataToFind.status})
+    .then(() => {
+      fetchTodoList()
+      })
+    // })
   }
 
-  const deleteTodoItem = (index) => {
-    const removeTodoArray = [...todoList]
-
-    removeTodoArray.splice (index, 1)
-    setTodoList(removeTodoArray)
+  const fetchTodoList = () => {
+    axios.get("http://localhost:2000/todos")
+    .then((res) => {
+      setTodoList(res.data)
+    })
   }
 
-  const toggleTodoStatus = (index) => {
-    const duplicateTodoArray = [...todoList]
-
-    duplicateTodoArray[index].status = !duplicateTodoArray[index].status
-    setTodoList(duplicateTodoArray)
-  }
-  
   return (
   <>
     {/* <Navbar/> */}
@@ -129,6 +153,7 @@ function App() {
         </div>
         <div className='col-2'> 
         <Button onClick={addTodoItem} color='success'>Add Todo</Button>
+        <Button onClick={fetchTodoList} color='info'>Fetch Todo</Button>
       </div>
       </div>
       <div className='row'>
@@ -137,8 +162,8 @@ function App() {
         {renderTodoList()}
         </div>
       </div>
-      <h1>{myUsername}</h1>
-      <Button onClick={changeUsername}>Change username</Button>
+      {/* <h1>{myUsername}</h1>
+      <Button onClick={changeUsername}>Change username</Button> */}
     </div>
     </> 
   )
@@ -172,7 +197,8 @@ function App() {
     <TourCard/>
   </div>
   <ClassComponent/> */}
-
 }
+
+
 
 export default App;

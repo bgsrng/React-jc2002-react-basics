@@ -1,0 +1,22 @@
+{
+  "todos": [
+    {
+      "id": 1,
+      "date": "04-03-2022",
+      "action": "Belajar Fundamental",
+      "status": true
+    },
+    {
+      "dates": "2022-03-05",
+      "action": "abc",
+      "status": false,
+      "id": 4
+    },
+    {
+      "dates": "2022-03-06",
+      "action": "aasd",
+      "status": false,
+      "id": 5
+    }
+  ]
+}
