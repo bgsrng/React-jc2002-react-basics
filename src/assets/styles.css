@@ -135,7 +135,7 @@ button {
   padding: 8px 12px;
   color: white;
   border: 0;
-  font-size: 12px !important;
+  /* font-size: 12px !important; */
 }
 
 button:hover {
